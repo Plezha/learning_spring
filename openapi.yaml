@@ -1,0 +1,198 @@
+openapi: 3.0.3
+info:
+  version: 0.0.1
+  title: My API
+servers:
+  - url: http://localhost:8080
+paths:
+  /user/me:
+    get:
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Unsuccessful
+  /user/auth/signup:
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSignupRequest'
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Unsuccessful
+  /user/auth/login:
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginRequest'
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLoginResponse'
+        '400':
+          description: Unsuccessful
+
+  /competition/create:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompetitionCreateRequest'
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionResponse'
+        '400':
+          description: Unsuccessful
+  /competition/{competition_uuid}:
+    get:
+      parameters:
+        - name: competition_uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionResponse'
+        '400':
+          description: Unsuccessful
+    put:
+      parameters:
+        - name: competition_uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompetitionEditRequest'
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionResponse'
+        '400':
+          description: Unsuccessful
+    delete:
+      parameters:
+        - name: competition_uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionResponse'
+        '400':
+          description: Unsuccessful
+  /competition/get_all:
+    get:
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CompetitionResponse'
+        '400':
+          description: Unsuccessful
+
+
+components:
+  schemas:
+    UserResponse:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: James
+        email:
+          type: string
+          example: john@email.com
+    UserSignupRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+    UserLoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+    UserLoginResponse:
+      type: object
+      properties:
+        jwt:
+          type: string
+        expiresInMilliseconds:
+          type: integer
+
+    CompetitionCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+    CompetitionEditRequest:
+      type: object
+      properties:
+        name:
+          type: string
+    CompetitionResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        uuid:
+          type: string
+        admins:
+          type: array
+          items:
+            type: string
