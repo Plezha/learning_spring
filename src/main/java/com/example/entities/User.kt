@@ -1,5 +1,6 @@
 package com.example.entities
 
+import org.openapitools.model.UserResponse
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util.*
@@ -24,4 +25,11 @@ data class User @JvmOverloads constructor(
     override fun getUsername(): String {
         return email
     }
+
+    fun toUserResponse(): UserResponse =
+        UserResponse()
+            .uuid(uuid)
+            .email(email)
+            .firstName(firstName)
+            .lastName(lastName)
 }

@@ -40,13 +40,8 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserResponse> userAuthSignupPut(UserSignupRequest userSignupRequest) {
         User registeredUser = authenticationService.signup(userSignupRequest);
-        UserResponse userResponse = new UserResponse()
-                .uuid(registeredUser.getUuid())
-                .email(registeredUser.getEmail())
-                .firstName(registeredUser.getFirstName())
-                .lastName(registeredUser.getLastName());
 
-        return ResponseEntity.ok(userResponse);
+        return ResponseEntity.ok(registeredUser.toUserResponse());
     }
 
     @Override
@@ -54,8 +49,7 @@ public class UserController implements UserApi {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         User currentUser = (User) authentication.getPrincipal();
-        System.out.println(currentUser);
 
-        return ResponseEntity.ok(new UserResponse());
+        return ResponseEntity.ok(currentUser.toUserResponse());
     }
 }
