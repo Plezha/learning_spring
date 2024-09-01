@@ -1,33 +1,34 @@
 package com.example.repositories;
 
 import com.example.entities.User;
-import com.example.entities.User;
 import com.example.entities.UserRole;
-import kotlin.random.URandomKt;
-import org.openapitools.model.UserResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Repository
 public class UserRepository {
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public UserRepository(
             JdbcTemplate jdbcTemplate
     ) {
         this.passwordEncoder = new BCryptPasswordEncoder();
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public PasswordEncoder getPasswordEncoder() {
+        return passwordEncoder;
     }
 
     @PostConstruct
@@ -91,16 +92,7 @@ public class UserRepository {
                 rs -> {
                     var result = new ArrayList<User>();
                     while (rs.next()) {
-                        result.add(
-                                new User(
-                                        UUID.fromString(rs.getString("uuid")),
-                                        rs.getString("email"),
-                                        rs.getString("password"),
-                                        UserRole.valueOf(rs.getString("role")),
-                                        rs.getString("first_name"),
-                                        rs.getString("last_name")
-                                )
-                        );
+                        result.add(extractUser(rs));
                     }
                     return result;
                 }
@@ -121,7 +113,14 @@ public class UserRepository {
         return findFirstByEmail(user.getEmail());
     }
 
-    public PasswordEncoder getPasswordEncoder() {
-        return passwordEncoder;
+    private static @NotNull User extractUser(ResultSet rs) throws SQLException {
+        return new User(
+                UUID.fromString(rs.getString("uuid")),
+                rs.getString("email"),
+                rs.getString("password"),
+                UserRole.valueOf(rs.getString("role")),
+                rs.getString("first_name"),
+                rs.getString("last_name")
+        );
     }
 }
