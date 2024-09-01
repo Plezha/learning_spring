@@ -1,5 +1,6 @@
 package com.example.services;
 
+import com.example.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -33,7 +34,13 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        var extraClaims = new HashMap<String, Object>();
+        if (userDetails instanceof User customUserDetails) {
+            extraClaims.put("id", customUserDetails.getUuid());
+            extraClaims.put("email", customUserDetails.getEmail());
+            extraClaims.put("role", customUserDetails.getRole());
+        }
+        return generateToken(extraClaims, userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {

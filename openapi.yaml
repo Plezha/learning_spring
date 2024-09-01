@@ -142,6 +142,10 @@ components:
         uuid:
           type: string
           format: uuid
+        role:
+          enum:
+            - "ADMIN"
+            - "USER"
         firstName:
           type: string
           example: John
