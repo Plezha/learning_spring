@@ -1,4 +1,4 @@
-package com.example.configs;
+package com.example.configs.security;
 
 import com.example.entities.UserRole;
 import org.springframework.context.annotation.Bean;
@@ -25,13 +25,16 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CompetitionSecurityFilter competitionSecurityFilter;
 
     public SecurityConfiguration(
             JwtAuthenticationFilter jwtAuthenticationFilter,
-            AuthenticationProvider authenticationProvider
+            AuthenticationProvider authenticationProvider,
+            CompetitionSecurityFilter competitionSecurityFilter
     ) {
         this.authenticationProvider = authenticationProvider;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.competitionSecurityFilter = competitionSecurityFilter;
     }
 
     @Bean
@@ -48,7 +51,8 @@ public class SecurityConfiguration {
                 )
                 .sessionManagement(withDefaults())
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(competitionSecurityFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

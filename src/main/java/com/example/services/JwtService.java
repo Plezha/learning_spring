@@ -10,6 +10,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +24,14 @@ public class JwtService {
 
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
+
+    public UUID extractUUID(String token) {
+        return UUID.fromString(
+                extractClaim(token,
+                        claims -> claims.get("id", String.class)
+                )
+        );
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

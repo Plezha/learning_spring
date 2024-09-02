@@ -196,7 +196,8 @@ components:
           type: string
         uuid:
           type: string
-        admins:
+        owners:
           type: array
           items:
+            description: User's UUIDs
             type: string
