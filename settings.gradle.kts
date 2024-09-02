@@ -3,4 +3,4 @@ pluginManagement {
         kotlin("jvm") version "2.0.10"
     }
 }
-rootProject.name = "demo"
+rootProject.name = "learning_spring"

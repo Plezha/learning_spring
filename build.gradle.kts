@@ -9,7 +9,7 @@ plugins {
 	kotlin("jvm")
 }
 
-group = "com.example.demo"
+group = "com.example"
 version = "0.0.1-SNAPSHOT"
 val openapiGenOutputDir = "${layout.buildDirectory.asFile.get().path}/generated-sources/openapi-generated"
 
