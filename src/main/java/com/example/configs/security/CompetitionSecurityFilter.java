@@ -60,12 +60,7 @@ public class CompetitionSecurityFilter extends OncePerRequestFilter {
                     UUID competitionUuid = UUID.fromString(
                             uri.substring((COMPETITION_URL_START + "/").length())
                     );
-                    UUID userUuid = UUID.randomUUID();
-                    try {
-                        userUuid = jwtService.extractUUID(jwt);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    UUID userUuid = jwtService.extractUUID(jwt);
                     if (competitionService.doesUserOwnCompetition(userUuid, competitionUuid)) {
                         filterChain.doFilter(request, response);
                     } else {
